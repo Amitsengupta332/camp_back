@@ -1,4 +1,4 @@
-# FoundIt - Lost and Found System
+<!-- # FoundIt - Lost and Found System
 
 This project is a lost and found management system with authentication with JWT. In this project User can register, login, report found items, claim found items.
 Found items , and users data are stored in PostgresSQL. In this project [Prisma](https://www.prisma.io/) (Prisma is an ORM (Object-Relational Mapping) specifically designed for SQL databases like Postgres, MySQL, MariaDB, and SQLite. It allows you to interact with your database using modern JavaScript syntax and abstracts away a lot of the complexity of dealing with databases directly.)
@@ -75,4 +75,4 @@ yarn dev
 <br>
 
 # [Deployed Server Link](https://assignment-9-server-delta.vercel.app/)
-"# camp_back" 
+"# camp_back"  -->
