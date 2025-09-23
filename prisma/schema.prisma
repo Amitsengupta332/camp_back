@@ -1,0 +1,127 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String       @id @default(uuid())
+  name      String
+  email     String       @unique
+  password  String
+  role      UserRole     @default(USER)
+  status    UserStatus   @default(ACTIVE)
+  image     String?      @default("")
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  profile   UserProfile?
+  foundItem FoundItem[]
+  claim     Claim[]
+  LostItem  LostItem[]
+
+  @@map("users")
+}
+
+model UserProfile {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  bio       String?  @default("")
+  age       Int?     @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("user_profiles")
+}
+
+model FoundItemCategory {
+  id        String      @id @default(uuid())
+  name      String      @unique
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  foundItem FoundItem[]
+  LostItem  LostItem[]
+
+  @@map("found_item_categories")
+}
+
+model FoundItem {
+  id            String            @id @default(uuid())
+  userId        String
+  user          User              @relation(fields: [userId], references: [id])
+  categoryId    String
+  category      FoundItemCategory @relation(fields: [categoryId], references: [id])
+  foundItemName String
+  description   String
+  location      String
+  foundDate     DateTime?         @default(now())
+  image         String?           @default("https://t3.ftcdn.net/jpg/02/48/42/64/360_F_248426448_NVKLywWqArG2ADUxDq6QprtIzsF82dMF.jpg")
+  name          String?           @default("")
+  phone         String?           @default("")
+  email         String?           @default("")
+  status        ClaimStatus       @default(PENDING)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  claim         Claim[]
+
+  @@map("found_items")
+}
+
+model LostItem {
+  id           String            @id @default(uuid())
+  userId       String
+  user         User              @relation(fields: [userId], references: [id])
+  categoryId   String
+  category     FoundItemCategory @relation(fields: [categoryId], references: [id])
+  lostItemName String
+  description  String
+  location     String
+  lostDate     DateTime?         @default(now())
+  image        String?           @default("https://t3.ftcdn.net/jpg/02/48/42/64/360_F_248426448_NVKLywWqArG2ADUxDq6QprtIzsF82dMF.jpg")
+  name         String?           @default("")
+  phone        String?           @default("")
+  email        String?           @default("")
+  itemFound    Boolean           @default(false)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  @@map("lost_items")
+}
+
+model Claim {
+  id                     String      @id @default(uuid())
+  userId                 String
+  user                   User        @relation(fields: [userId], references: [id])
+  foundItemId            String
+  foundItem              FoundItem   @relation(fields: [foundItemId], references: [id])
+  status                 ClaimStatus @default(PENDING)
+  distinguishingFeatures String
+  lostDate               DateTime
+  createdAt              DateTime    @default(now())
+  updatedAt              DateTime    @updatedAt
+}
+
+enum FoundItemStatus {
+  APPROVED
+  REJECTED
+}
+
+enum ClaimStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+}
